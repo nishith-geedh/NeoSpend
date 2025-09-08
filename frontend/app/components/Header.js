@@ -39,7 +39,7 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await signOut({ callbackUrl: 'http://localhost:3000/', redirect: true });
+      await signOut({ redirect: true });
     } catch (error) {
       console.error('Logout error:', error);
     }

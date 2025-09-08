@@ -13,6 +13,7 @@ const handler = NextAuth({
   pages: {
     signIn: '/login',
     error: '/login',
+    signOut: '/',
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
@@ -48,6 +49,11 @@ const handler = NextAuth({
       // If URL is the callback URL, redirect to dashboard
       if (url.includes('/api/auth/callback/cognito')) {
         return baseUrl + '/dashboard';
+      }
+      
+      // For logout, ensure we stay on the same domain
+      if (url.includes('/api/auth/signout')) {
+        return baseUrl;
       }
       
       return url;
