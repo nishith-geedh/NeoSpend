@@ -265,7 +265,8 @@ NeoSpend/
    ```
 
 4. **Access the application**
-   Open [http://localhost:3000](http://localhost:3000) in your browser
+   - **Development**: [http://localhost:3000](http://localhost:3000)
+   - **Production**: [https://main.d11rdxozwhcrfu.amplifyapp.com](https://main.d11rdxozwhcrfu.amplifyapp.com)
 
 ### 🌐 Production Deployment
 
