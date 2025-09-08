@@ -1,0 +1,313 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: NeoSpend - Personal Finance Tracker with Analytics Dashboard
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs18.x
+    Environment:
+      Variables:
+        EXPENSES_TABLE_NAME: !Ref ExpensesTable
+        BUDGETS_TABLE_NAME: !Ref BudgetsTable
+        CATEGORIES_TABLE_NAME: !Ref CategoriesTable
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, staging, prod]
+
+Resources:
+  # DynamoDB Tables
+  ExpensesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: NeoSpend-Expenses
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: expenseId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: date
+          AttributeType: S
+      KeySchema:
+        - AttributeName: expenseId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: UserIdIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: CategoryIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: DateIndex
+          KeySchema:
+            - AttributeName: date
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  BudgetsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: NeoSpend-Budgets
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: budgetId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+      KeySchema:
+        - AttributeName: budgetId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: UserIdIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: CategoryIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  CategoriesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: NeoSpend-Categories
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: categoryId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: name
+          AttributeType: S
+      KeySchema:
+        - AttributeName: categoryId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: UserIdIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: NameIndex
+          KeySchema:
+            - AttributeName: name
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  # Cognito User Pool
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: NeoSpendUserPool
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: neospend-client
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      UserPoolId: !Ref UserPool
+      CallbackURLs:
+        - http://localhost:3000/api/auth/callback/cognito
+        - https://your-domain.com/api/auth/callback/cognito
+      LogoutURLs:
+        - http://localhost:3000
+        - https://your-domain.com
+
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Sub "neospend-${AWS::AccountId}-${AWS::Region}"
+      UserPoolId: !Ref UserPool
+
+  # API Gateway
+  RestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: NeoSpend-API
+      StageName: prod
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !GetAtt UserPool.Arn
+
+  # Lambda Functions
+  ExpensesFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: NeoSpend-Expenses
+      CodeUri: src/expenses/
+      Handler: index.handler
+      Events:
+        GetExpenses:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /expenses
+            Method: get
+        PostExpenses:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /expenses
+            Method: post
+        PutExpenses:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /expenses/{id}
+            Method: put
+        DeleteExpenses:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /expenses/{id}
+            Method: delete
+
+  BudgetsFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: NeoSpend-Budgets
+      CodeUri: src/budgets/
+      Handler: index.handler
+      Events:
+        GetBudgets:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /budgets
+            Method: get
+        PostBudgets:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /budgets
+            Method: post
+        PutBudgets:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /budgets/{id}
+            Method: put
+        DeleteBudgets:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /budgets/{id}
+            Method: delete
+
+  CategoriesFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: NeoSpend-Categories
+      CodeUri: src/categories/
+      Handler: index.handler
+      Events:
+        GetCategories:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /categories
+            Method: get
+        PostCategories:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /categories
+            Method: post
+        PutCategories:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /categories/{id}
+            Method: put
+        DeleteCategories:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /categories/{id}
+            Method: delete
+
+  AnalyticsFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: NeoSpend-Analytics
+      CodeUri: src/analytics/
+      Handler: index.handler
+      Events:
+        GetAnalytics:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /analytics
+            Method: get
+
+Outputs:
+  ApiBaseUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${RestApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+    Export:
+      Name: !Sub "${AWS::StackName}-ApiBaseUrl"
+  
+  UserPoolId:
+    Description: Cognito User Pool ID
+    Value: !Ref UserPool
+    Export:
+      Name: !Sub "${AWS::StackName}-UserPoolId"
+  
+  UserPoolClientId:
+    Description: Cognito User Pool Client ID
+    Value: !Ref UserPoolClient
+    Export:
+      Name: !Sub "${AWS::StackName}-UserPoolClientId"
+  
+  UserPoolDomain:
+    Description: Cognito User Pool Domain
+    Value: !Ref UserPoolDomain
+    Export:
+      Name: !Sub "${AWS::StackName}-UserPoolDomain"
+  
+  CognitoIssuerUrl:
+    Description: Cognito Issuer URL
+    Value: !Sub "https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}"
+    Export:
+      Name: !Sub "${AWS::StackName}-CognitoIssuerUrl"
