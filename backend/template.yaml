@@ -163,7 +163,7 @@ Resources:
       CorsConfiguration:
         AllowOrigins:
           - http://localhost:3000
-          - https://your-domain.com
+          - https://main.d11rdxozwhcrfu.amplifyapp.com
         AllowMethods:
           - GET
           - POST
