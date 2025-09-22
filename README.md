@@ -79,11 +79,7 @@
 
 ## 🏗️ Architecture
 
-### **System Architecture Diagram**
 
-![NeoSpend Architecture](demo/neospend_architecture.png)
-
-*Complete system architecture showing AWS services integration and data flow*
 
 ### **High-Level Architecture**
 
@@ -103,6 +99,8 @@
 └─────────────────┘    └──────────────────┘
 ```
 ![NeoSpend Architecture](./neospend_architecture.png)
+*Complete system architecture showing AWS services integration and data flow*
+
 
 ### **Detailed Component Architecture**
 
