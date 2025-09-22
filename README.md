@@ -102,6 +102,7 @@
 │                 │    │   (Node.js)      │
 └─────────────────┘    └──────────────────┘
 ```
+![NeoSpend Architecture](./neospend_architecture.png)
 
 ### **Detailed Component Architecture**
 
