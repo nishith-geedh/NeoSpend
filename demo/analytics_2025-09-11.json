@@ -1,0 +1,142 @@
+{
+  "summary": {
+    "totalExpenses": 2200,
+    "monthlyExpenses": 1700,
+    "topCategories": [
+      {
+        "name": "Food",
+        "amount": 1000,
+        "count": 2,
+        "percentage": 45.45454545454545
+      },
+      {
+        "name": "Transport",
+        "amount": 800,
+        "count": 2,
+        "percentage": 36.36363636363637
+      },
+      {
+        "name": "Drinks",
+        "amount": 400,
+        "count": 1,
+        "percentage": 18.181818181818183
+      }
+    ]
+  },
+  "trends": {
+    "daily": [
+      {
+        "label": "Fri",
+        "amount": 400
+      },
+      {
+        "label": "Sat",
+        "amount": 0
+      },
+      {
+        "label": "Sun",
+        "amount": 500
+      },
+      {
+        "label": "Mon",
+        "amount": 0
+      },
+      {
+        "label": "Tue",
+        "amount": 0
+      },
+      {
+        "label": "Wed",
+        "amount": 0
+      },
+      {
+        "label": "Thu",
+        "amount": 800
+      }
+    ],
+    "weekly": [
+      {
+        "label": "3 weeks ago",
+        "amount": 0
+      },
+      {
+        "label": "2 weeks ago",
+        "amount": 500
+      },
+      {
+        "label": "1 week ago",
+        "amount": 900
+      },
+      {
+        "label": "This Week",
+        "amount": 800
+      }
+    ],
+    "monthly": [
+      {
+        "label": "Apr 2025",
+        "amount": 0
+      },
+      {
+        "label": "May 2025",
+        "amount": 0
+      },
+      {
+        "label": "Jun 2025",
+        "amount": 0
+      },
+      {
+        "label": "Jul 2025",
+        "amount": 0
+      },
+      {
+        "label": "Aug 2025",
+        "amount": 500
+      },
+      {
+        "label": "Sep 2025",
+        "amount": 1700
+      }
+    ],
+    "annual": [
+      {
+        "label": "2022",
+        "amount": 0
+      },
+      {
+        "label": "2023",
+        "amount": 0
+      },
+      {
+        "label": "2024",
+        "amount": 0
+      },
+      {
+        "label": "2025",
+        "amount": 2200
+      }
+    ]
+  },
+  "categoryBreakdown": [
+    {
+      "name": "Food",
+      "amount": 1000,
+      "count": 2,
+      "percentage": 45.45454545454545
+    },
+    {
+      "name": "Transport",
+      "amount": 800,
+      "count": 2,
+      "percentage": 36.36363636363637
+    },
+    {
+      "name": "Drinks",
+      "amount": 400,
+      "count": 1,
+      "percentage": 18.181818181818183
+    }
+  ],
+  "downloadedAt": "11/09/2025, 06:06:57 pm",
+  "period": "All Time"
+}

@@ -11,6 +11,7 @@
 
 - [✨ Features](#-features)
 - [🏗️ Architecture](#️-architecture)
+- [📸 Demo & Screenshots](#-demo--screenshots)
 - [📂 Project Structure](#-project-structure)
 - [🚀 Quick Start](#-quick-start)
 - [🔧 Prerequisites](#-prerequisites)
@@ -78,6 +79,12 @@
 
 ## 🏗️ Architecture
 
+### **System Architecture Diagram**
+
+![NeoSpend Architecture](demo/neospend_architecture.png)
+
+*Complete system architecture showing AWS services integration and data flow*
+
 ### **High-Level Architecture**
 
 ```
@@ -133,6 +140,68 @@
 - **Hosted UI**: Customizable login/signup interface
 - **JWT Tokens**: Secure session management
 - **Multi-factor Authentication** support
+
+---
+
+## 📸 Demo & Screenshots
+
+### **🎨 Frontend Application**
+
+#### **Landing Page**
+![NeoSpend Landing Page](demo/landing%20page.png)
+*Modern, responsive landing page with glass-morphism design*
+
+#### **Dashboard Overview**
+![Dashboard](demo/dashboard.png)
+*Comprehensive dashboard showing key financial metrics and insights*
+
+#### **Expense Management**
+![Expenses](demo/expenses.png)
+*Smart expense tracking with category management and filtering*
+
+#### **Budget Management**
+![Budgets](demo/budgets.png)
+*Dynamic budget creation with real-time progress tracking and alerts*
+
+#### **Analytics Dashboard**
+![Analytics](demo/analytics.png)
+*Interactive analytics with charts and spending pattern analysis*
+
+### **☁️ AWS Infrastructure**
+
+#### **AWS Amplify Console**
+![Amplify](demo/amplify.png)
+*Frontend deployment and hosting with AWS Amplify*
+
+#### **API Gateway Configuration**
+![API Gateway](demo/api_gateway.png)
+*RESTful API endpoints with JWT authentication*
+
+#### **AWS Lambda Functions**
+![Lambda](demo/lambda.png)
+*Serverless backend functions for expense, budget, and analytics management*
+
+#### **Amazon Cognito User Pool**
+![Cognito](demo/cognito.png)
+*Secure user authentication and authorization*
+
+#### **Amazon DynamoDB Tables**
+
+**Expenses Table**
+![DynamoDB Expenses](demo/dynamodb_expenses.png)
+*User expense data with GSI for efficient querying*
+
+**Budgets Table**
+![DynamoDB Budgets](demo/dynamodb_budgets.png)
+*Budget management data with category-based indexing*
+
+**Categories Table**
+![DynamoDB Categories](demo/dynamodb_categories.png)
+*Category management with user-specific organization*
+
+#### **CloudWatch Monitoring**
+![CloudWatch](demo/cloudwatch.png)
+*Application monitoring and logging with AWS CloudWatch*
 
 ---
 
